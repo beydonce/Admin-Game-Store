@@ -1,79 +1,99 @@
-// editGame.js
+document.addEventListener('DOMContentLoaded', function () {
+  const saveBtn = document.getElementById('saveBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const backBtn = document.getElementById('backBtn');
+  const loading = document.getElementById('loading');
+  const error = document.getElementById('error');
+  const editForm = document.getElementById('editForm');
 
-// Utility function to extract a query parameter from the URL
-function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+  const gameId = urlParams.get('id');
 
-const gameId = getQueryParam('id');
-
-if (!gameId) {
-  alert("No game specified for editing.");
-  window.location.href = 'index.html';
-}
-
-// Function to load game details using the dedicated GET endpoint
-async function loadGameDetails() {
-  try {
-    const response = await axios.get(`http://127.0.0.1:5000/games/${gameId}`);
-    const game = response.data;
-    if (!game) {
-      alert("Game not found.");
-      window.location.href = 'index.html';
-      return;
-    }
-    // Populate the form fields with the current game details
-    document.getElementById('game-name').value = game.name;
-    document.getElementById('game-creator').value = game.creator;
-    document.getElementById('game-year-published').value = game.year_published;
-    document.getElementById('game-genre').value = game.genre;
-    document.getElementById('game-picture-url').value = game.picture_url || '';
-  } catch (error) {
-    console.error("Error loading game details:", error);
-    alert("Failed to load game details.");
+  // Fetch game data when the page loads
+  function fetchGameData() {
+    fetch(`http://127.0.0.1:5000/games/${gameId}`)
+      .then((response) => response.ok ? response.json() : Promise.reject('Failed to load data'))
+      .then((data) => {
+        console.log(data); // Log data to check if 'quantity' is present
+        if (data && data.id) {
+          document.getElementById('name').value = data.name;
+          document.getElementById('creator').value = data.creator;
+          document.getElementById('year_published').value = data.year_published;
+          document.getElementById('genre').value = data.genre;
+          document.getElementById('picture_url').value = data.picture_url || '';
+          document.getElementById('quantity').value = data.quantity !== undefined ? data.quantity : ''; // Set quantity value
+        } else {
+          showError();
+        }
+      })
+      .catch(showError);
   }
-}
 
-// Wrap event registration in DOMContentLoaded to ensure elements are available and listeners are added only once.
-document.addEventListener("DOMContentLoaded", () => {
-  const saveButton = document.getElementById("save-button");
-  const returnButton = document.getElementById("return-button");
-  const editForm = document.getElementById("edit-game-form");
+  // Show and hide loading spinner
+  function showLoading() {
+    loading.style.display = 'flex';
+    error.style.display = 'none';
+  }
+  function hideLoading() {
+    loading.style.display = 'none';
+  }
 
-  // Handle form submission for saving updates
-  editForm.addEventListener("submit", async function(e) {
-    e.preventDefault();
+  // Show error message
+  function showError() {
+    hideLoading();
+    error.style.display = 'block';
+  }
 
-    // Disable the Save button immediately to prevent duplicate submissions
-    saveButton.disabled = true;
+  // Hide error message
+  function hideError() {
+    error.style.display = 'none';
+  }
 
-    const updatedGame = {
-      name: document.getElementById('game-name').value,
-      creator: document.getElementById('game-creator').value,
-      year_published: document.getElementById('game-year-published').value,
-      genre: document.getElementById('game-genre').value,
-      picture_url: document.getElementById('game-picture-url').value
-    };
-
-    try {
-      await axios.put(`http://127.0.0.1:5000/games/${gameId}`, updatedGame);
-      alert("Game updated successfully!");
-      // Redirect back to index.html immediately after the alert is dismissed
-      window.location.href = 'index.html';
-    } catch (error) {
-      console.error("Error updating game:", error);
-      alert("Failed to update game.");
-      // Re-enable the save button if the update fails
-      saveButton.disabled = false;
-    }
+  // Clear form fields
+  clearBtn.addEventListener('click', function () {
+    editForm.reset();
+    hideError();
   });
 
-  // Handle return button click to go back to the games page without saving
-  returnButton.addEventListener("click", function() {
+  // Return to games page
+  backBtn.addEventListener('click', function () {
     window.location.href = 'index.html';
   });
 
-  // Load game details when the page is ready
-  loadGameDetails();
+  // Handle form submission to save the game
+  editForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const gameData = {
+      name: document.getElementById('name').value.trim(),
+      creator: document.getElementById('creator').value.trim(),
+      year_published: parseInt(document.getElementById('year_published').value, 10),
+      genre: document.getElementById('genre').value.trim(),
+      picture_url: document.getElementById('picture_url').value.trim(),
+      quantity: parseInt(document.getElementById('quantity').value, 10) || 0 // Save quantity value
+    };
+
+    showLoading();
+
+    fetch(`http://127.0.0.1:5000/games/${gameId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gameData)
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        hideLoading();
+        if (data.message === "Game updated successfully.") {
+          window.location.href = 'index.html';
+        } else {
+          showError();
+        }
+      })
+      .catch(showError);
+  });
+
+  // Fetch game data on page load
+  fetchGameData();
 });

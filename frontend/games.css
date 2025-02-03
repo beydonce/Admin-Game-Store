@@ -151,10 +151,10 @@ body {
 .game-actions button {
   background: #ff5e62;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem;
   color: #fff;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
   flex: 1;
@@ -174,5 +174,14 @@ body {
   
   .header h1 {
     margin-bottom: 1rem;
+  }
+
+  .form-group {
+    grid-template-columns: 1fr; /* Stack inputs on smaller screens */
+  }
+
+  .game-actions button {
+    font-size: 0.85rem;
+    padding: 0.5rem;
   }
 }

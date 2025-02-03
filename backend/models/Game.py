@@ -9,4 +9,5 @@ class Game(db.Model):
     creator = db.Column(db.String(200), nullable=False)
     year_published = db.Column(db.Integer, nullable=False)
     genre = db.Column(db.String(200), nullable=False)
-    picture_url = db.Column(db.String(500), nullable=True) 
+    quantity = db.Column(db.Integer, nullable=False, default=0)  # Ensure quantity has a default
+    picture_url = db.Column(db.String(500), nullable=True)
