@@ -4,16 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game Management System</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="games.css" />
   </head>
   <body>
     <div class="container">
-      <!-- Header with Logout -->
+      <!-- Header -->
       <div class="header">
         <h1>Game Management System</h1>
         <button onclick="logout()">Logout</button>
       </div>
       
+      <!-- Games Section -->
       <div class="games-section">
         <h2>Add New Game</h2>
         <div class="form-group">
@@ -26,14 +27,33 @@
         </div>
   
         <h2>All Games</h2>
-        <div id="games-list" class="games-grid"></div>
+        <div id="games-list" class="games-grid">
+          <!-- Game cards will be injected here -->
+          <!-- Example structure for a game card:
+          <div class="game-card" id="game-1">
+            <img src="path/to/image.jpg" alt="Game Image">
+            <div class="card-content">
+              <h3>Game Title</h3>
+              <p>Creator: Example</p>
+              <p>Year: 2023</p>
+              <p>Genre: Adventure</p>
+            </div>
+            <div class="game-actions">
+              <button onclick="editGame(1)">Edit</button>
+              <button onclick="delGame(1)">Delete</button>
+            </div>
+          </div>
+          -->
+        </div>
   
         <h2>Loaned Games</h2>
-        <div id="loaned-games-list" class="games-grid"></div>
+        <div id="loaned-games-list" class="games-grid">
+          <!-- Loaned game cards go here -->
+        </div>
       </div>
     </div>
   
-    <!-- Include Axios and the game management script -->
+    <!-- Include Axios and your script.js -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="script.js"></script>
   </body>

@@ -77,34 +77,13 @@ async function getGames() {
     }
   }
   
-  // Function to edit a game
-  async function editGame(gameId) {
-    const newName = prompt('Enter new game name:');
-    const newCreator = prompt('Enter new game creator:');
-    const newYearPublished = prompt('Enter new year of publication:');
-    const newGenre = prompt('Enter new genre:');
-    const newPictureUrl = prompt('Enter new picture URL:');
-  
-    if (newName && newCreator && newYearPublished && newGenre) {
-      try {
-        await axios.put(`http://127.0.0.1:5000/games/${gameId}`, {
-          name: newName,
-          creator: newCreator,
-          year_published: newYearPublished,
-          genre: newGenre,
-          picture_url: newPictureUrl
-        });
-        alert('Game updated successfully!');
-        // Refresh the games list
-        getGames();
-      } catch (error) {
-        console.error('Error editing game:', error);
-        alert('Failed to edit game');
-      }
-    } else {
-      alert('All fields are required!');
-    }
-  }
+// Function to edit a game: redirect to editGame.html with the game ID as a query parameter.
+// Redirect to the edit page with the game ID as a query parameter.
+function editGame(gameId) {
+  window.location.href = `editGame.html?id=${gameId}`;
+}
+
+
   
   // Function to handle logout - redirect back to the login page
   function logout() {

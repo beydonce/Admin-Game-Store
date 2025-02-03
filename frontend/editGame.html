@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Game - Game Management System</title>
+    <link rel="stylesheet" href="editGame.css" />
+  </head>
+  <body>
+    <div class="edit-container">
+      <h2>Edit Game</h2>
+      <form id="edit-game-form">
+        <input type="text" id="game-name" placeholder="Game Name" required />
+        <input type="text" id="game-creator" placeholder="Creator" required />
+        <input type="text" id="game-year-published" placeholder="Year Published" required />
+        <input type="text" id="game-genre" placeholder="Genre" required />
+        <input type="text" id="game-picture-url" placeholder="Picture URL" />
+        <div class="button-group">
+          <button type="submit" id="save-button">Save</button>
+          <button type="button" id="return-button">Return to Games Page</button>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Include Axios and your editGame.js -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="editGame.js"></script>
+  </body>
+</html>
