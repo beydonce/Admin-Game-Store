@@ -1,0 +1,198 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header button {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f44336;
+  color: #fff;
+  cursor: pointer;
+}
+
+.header button:hover {
+  background-color: #d32f2f;
+}
+
+/* Authentication Section */
+#auth-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#auth-section h2 {
+  margin-top: 0;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#login-form input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#login-form button {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+}
+
+#login-form button:hover {
+  background-color: #45a049;
+}
+
+/* Main Section */
+#main-section {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Group for Adding Games */
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-group button {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+}
+
+.form-group button:hover {
+  background-color: #45a049;
+}
+
+/* Games Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+  gap: 15px;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+/* Game Cards */
+.games-grid .game-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  text-align: center;
+}
+
+.games-grid .game-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.games-grid .game-card h3 {
+  margin: 10px 0 5px;
+  font-size: 16px;
+  color: #4CAF50;
+}
+
+.games-grid .game-card p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Buttons for Editing and Deleting */
+.game-card .game-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.game-card .game-actions button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f44336;
+  color: #fff;
+  cursor: pointer;
+}
+
+.game-card .game-actions button:hover {
+  background-color: #d32f2f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-group {
+    flex-direction: column;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header button {
+    margin-top: 10px;
+  }
+}

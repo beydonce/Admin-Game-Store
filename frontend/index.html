@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Management System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header with Logout -->
+      <div class="header">
+        <h1>Game Management System</h1>
+        <button onclick="logout()">Logout</button>
+      </div>
+      
+      <div class="games-section">
+        <h2>Add New Game</h2>
+        <div class="form-group">
+          <input type="text" id="game-name" placeholder="Game Name" />
+          <input type="text" id="game-creator" placeholder="Creator" />
+          <input type="text" id="game-year-published" placeholder="Year Published" />
+          <input type="text" id="game-genre" placeholder="Genre" />
+          <input type="text" id="game-picture-url" placeholder="Picture URL" />
+          <button onclick="addGame()">Add Game</button>
+        </div>
+  
+        <h2>All Games</h2>
+        <div id="games-list" class="games-grid"></div>
+  
+        <h2>Loaned Games</h2>
+        <div id="loaned-games-list" class="games-grid"></div>
+      </div>
+    </div>
+  
+    <!-- Include Axios and the game management script -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
