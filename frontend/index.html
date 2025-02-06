@@ -1,46 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Management System</title>
-    <link rel="stylesheet" href="games.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Management System</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="games.css" />
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>Game Management System</h1>
-            <button onclick="logout()">Logout</button>
-        </div>
-        
-        <!-- Games Section -->
-        <div class="games-section">
-            <h2>Add New Game</h2>
-            <div class="form-group">
-                <input type="text" id="game-name" placeholder="Game Name" />
-                <input type="text" id="game-creator" placeholder="Creator" />
-                <input type="text" id="game-year-published" placeholder="Year Published" />
-                <input type="text" id="game-genre" placeholder="Genre" />
-                <input type="number" id="game-quantity" placeholder="Quantity" min="1" />
-                <input type="text" id="game-picture-url" placeholder="Picture URL" />
-                <button onclick="addGame()">Add Game</button>
-            </div>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1>Game Management System</h1>
+      </div>
+      <div class="header-right">
+        <span id="adminName"></span>
+        <button id="themeToggle">Toggle Theme</button>
+        <button id="logoutButton">Logout</button>
+        <!-- Hamburger menu for mobile filtering (visible on small screens) -->
+        <button id="hamburger" class="hamburger">&#9776;</button>
+      </div>
+    </header>
+    
+    <!-- Filter & Sort Section (collapsible on mobile) -->
+    <section id="filterSortSection" class="filter-sort-section">
+      <div class="filter-group">
+        <label for="filter-genre">Filter by Genre:</label>
+        <select id="filter-genre">
+          <option value="all">All</option>
+          <option value="action">Action</option>
+          <option value="adventure">Adventure</option>
+          <option value="strategy">Strategy</option>
+          <option value="rpg">RPG</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+      <div class="sort-group">
+        <label for="sort-by">Sort by:</label>
+        <select id="sort-by">
+          <option value="default">Default</option>
+          <option value="quantity-asc">Quantity (Low to High)</option>
+          <option value="quantity-desc">Quantity (High to Low)</option>
+          <option value="year-asc">Year Published (Old to New)</option>
+          <option value="year-desc">Year Published (New to Old)</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+        </select>
+      </div>
+    </section>
+    
+    <!-- Add Game Section -->
+    <section class="add-game-section">
+      <h2>Add New Game</h2>
+      <div class="form-group">
+        <input type="text" id="game-name" placeholder="Game Name" />
+        <input type="text" id="game-creator" placeholder="Creator" />
+        <input type="text" id="game-year-published" placeholder="Year Published (e.g. 2023)" />
+        <input type="text" id="game-genre" placeholder="Genre" />
+        <input type="number" id="game-quantity" placeholder="Quantity" min="0" />
+        <input type="text" id="game-picture-url" placeholder="Picture URL" />
+        <button id="addGameButton">Add Game</button>
+      </div>
+    </section>
 
-            <h2>All Games</h2>
-            <div id="games-container" class="games-grid">
-                <!-- Game cards will be dynamically added here -->
-            </div>
+    <!-- All Games Section -->
+    <section class="games-display">
+      <h2>All Games</h2>
+      <div id="games-container" class="games-grid">
+        <!-- Game cards will be dynamically added here -->
+      </div>
+    </section>
 
-            <h2>Loaned Games</h2>
-            <div id="loaned-games-list" class="games-grid">
-                <!-- Loaned game cards go here -->
-            </div>
-        </div>
+    <!-- Sold Games Section -->
+    <section class="games-display">
+      <h2>Sold Games</h2>
+      <div id="sold-games-list" class="games-grid">
+        <!-- Sold-out game cards will be dynamically added here -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal for notifications (optional) -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modalMessage"></span>
+      <button id="modalClose">Close</button>
     </div>
+  </div>
 
-    <!-- Include Axios and script.js -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="script.js"></script>
+  <!-- Loading Spinner -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Include Axios and script.js -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Display admin name
+      const adminName = localStorage.getItem('adminName') || 'Admin';
+      document.getElementById('adminName').textContent = adminName;
+      
+      // Attach event listeners
+      document.getElementById('logoutButton').addEventListener('click', logout);
+      document.getElementById('addGameButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        addGame();
+      });
+      document.getElementById('filter-genre').addEventListener('change', renderFilteredAndSortedGames);
+      document.getElementById('sort-by').addEventListener('change', renderFilteredAndSortedGames);
+      document.getElementById('hamburger').addEventListener('click', function() {
+        const fs = document.getElementById('filterSortSection');
+        fs.classList.toggle('active');
+      });
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    });
+  </script>
 </body>
 </html>

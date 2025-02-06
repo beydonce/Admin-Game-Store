@@ -1,5 +1,3 @@
-// login.js
-
 async function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
@@ -10,10 +8,13 @@ async function login() {
       password: password
     });
 
-    console.log('Response:', response);  // For debugging
+    console.log('Response:', response);  // Debugging
     alert(response.data.message);        // Display message to user
 
     if (response.status === 200) {
+      // Store the admin's username in localStorage
+      localStorage.setItem('adminName', username);
+
       // Redirect to the game management page upon successful login
       window.location.href = 'index.html';
     }

@@ -25,6 +25,7 @@ def add_game():
         picture_url=data.get('picture_url'),
         quantity=quantity  # Store the quantity
     )
+
     db.session.add(new_game)  # Add the new game to the session
     db.session.commit()       # Commit the session to save changes
     return jsonify({'message': 'Game added to database.'}), 201
