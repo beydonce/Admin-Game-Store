@@ -1,9 +1,71 @@
-let allGames = [];       // Global variable to store all games
-let allCustomers = [];   // Global variable to store all customers
+// Global variables to store data
+let allGames = [];
+let allCustomers = [];
+
+// Run once the DOM content is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Display admin name
+  const adminName = localStorage.getItem('adminName') || 'Admin';
+  document.getElementById('adminName').textContent = adminName;
+
+  // Determine which tab to display (default to 'games')
+  const currentTab = localStorage.getItem('currentTab') || 'games';
+  if (currentTab === 'customers') {
+    document.getElementById('gamesSection').style.display = 'none';
+    document.getElementById('customersSection').style.display = 'block';
+    document.getElementById('customersTab').classList.add('active');
+    document.getElementById('gamesTab').classList.remove('active');
+    getCustomers();
+  } else {
+    document.getElementById('gamesSection').style.display = 'block';
+    document.getElementById('customersSection').style.display = 'none';
+    document.getElementById('gamesTab').classList.add('active');
+    document.getElementById('customersTab').classList.remove('active');
+  }
+
+  // Set up event listeners for tab navigation
+  document.getElementById('gamesTab').addEventListener('click', function() {
+    document.getElementById('gamesSection').style.display = 'block';
+    document.getElementById('customersSection').style.display = 'none';
+    this.classList.add('active');
+    document.getElementById('customersTab').classList.remove('active');
+    localStorage.setItem('currentTab', 'games');
+    getGames();
+  });
+  
+  document.getElementById('customersTab').addEventListener('click', function() {
+    document.getElementById('gamesSection').style.display = 'none';
+    document.getElementById('customersSection').style.display = 'block';
+    this.classList.add('active');
+    document.getElementById('gamesTab').classList.remove('active');
+    localStorage.setItem('currentTab', 'customers');
+    getCustomers();
+  });
+
+  // Other event listeners
+  document.getElementById('logoutButton').addEventListener('click', logout);
+  document.getElementById('addGameButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    addGame();
+  });
+  document.getElementById('addCustomerButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    addCustomer();
+  });
+  document.getElementById('filter-genre').addEventListener('change', renderFilteredAndSortedGames);
+  document.getElementById('sort-by').addEventListener('change', renderFilteredAndSortedGames);
+  document.getElementById('hamburger').addEventListener('click', function() {
+    document.getElementById('filterSortSection').classList.toggle('active');
+  });
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  // Load games by default if current tab is games
+  if (currentTab === 'games') {
+    getGames();
+  }
+});
 
 // ------------------- Games Functions -------------------
-
-// Function to get all games from the API
 async function getGames() {
   try {
     const response = await axios.get('http://127.0.0.1:5000/games');
@@ -15,12 +77,11 @@ async function getGames() {
   }
 }
 
-// Function to render games based on filter and sort options
 function renderFilteredAndSortedGames() {
   const filterGenre = document.getElementById('filter-genre').value;
   const sortBy = document.getElementById('sort-by').value;
-
   let filteredGames = allGames;
+
   if (filterGenre !== 'all') {
     filteredGames = filteredGames.filter(game => game.genre.toLowerCase() === filterGenre.toLowerCase());
   }
@@ -42,7 +103,6 @@ function renderFilteredAndSortedGames() {
 
   const gamesContainer = document.getElementById('games-container');
   const soldGamesList = document.getElementById('sold-games-list');
-
   gamesContainer.innerHTML = '';
   soldGamesList.innerHTML = '';
 
@@ -85,7 +145,6 @@ function renderFilteredAndSortedGames() {
   }
 }
 
-// Function to add a new game
 async function addGame() {
   const name = document.getElementById('game-name').value.trim();
   const creator = document.getElementById('game-creator').value.trim();
@@ -107,7 +166,6 @@ async function addGame() {
 
   const quantityValue = quantity === '' ? 1 : parseInt(quantity, 10);
 
-  // Check for duplicate game name (case-insensitive)
   try {
     const duplicateResponse = await axios.get('http://127.0.0.1:5000/games');
     const games = duplicateResponse.data.games;
@@ -129,8 +187,6 @@ async function addGame() {
       quantity: quantityValue,
       picture_url
     });
-
-    // Clear form fields
     document.getElementById('game-name').value = '';
     document.getElementById('game-creator').value = '';
     document.getElementById('game-year-published').value = '';
@@ -147,8 +203,6 @@ async function addGame() {
 }
 
 // ------------------- Customers Functions -------------------
-
-// Function to get all customers from the API
 async function getCustomers() {
   try {
     const response = await axios.get('http://127.0.0.1:5000/customers');
@@ -160,7 +214,6 @@ async function getCustomers() {
   }
 }
 
-// Function to render customers
 function renderCustomers() {
   const customersContainer = document.getElementById('customers-container');
   customersContainer.innerHTML = '';
@@ -170,7 +223,6 @@ function renderCustomers() {
       const customerCard = document.createElement('div');
       customerCard.classList.add('customer-card');
       customerCard.id = `customer-${customer.customer_id}`;
-
       customerCard.innerHTML = `
         <h3>${customer.customer_name || customer.username}</h3>
         <p><strong>Username:</strong> ${customer.username}</p>
@@ -179,10 +231,10 @@ function renderCustomers() {
         <p><strong>City:</strong> ${customer.city}</p>
         <p><strong>Country:</strong> ${customer.country}</p>
         <div class="customer-actions">
+          <button onclick="editCustomer(${customer.customer_id})">Edit</button>
           <button onclick="deleteCustomer(${customer.customer_id})">Delete</button>
         </div>
       `;
-
       customersContainer.appendChild(customerCard);
     });
   } else {
@@ -190,7 +242,6 @@ function renderCustomers() {
   }
 }
 
-// Function to add a new customer
 async function addCustomer() {
   const username = document.getElementById('customer-username').value.trim();
   const password = document.getElementById('customer-password').value.trim();
@@ -215,8 +266,6 @@ async function addCustomer() {
       city,
       country
     });
-
-    // Clear form fields
     document.getElementById('customer-username').value = '';
     document.getElementById('customer-password').value = '';
     document.getElementById('customer-name').value = '';
@@ -233,10 +282,8 @@ async function addCustomer() {
   }
 }
 
-// Function to delete a game
 async function delGame(gameId) {
   if (!confirm('Are you sure you want to delete this game?')) return;
-
   try {
     await axios.delete(`http://127.0.0.1:5000/games/${gameId}`);
     showModal('Game deleted successfully!', true);
@@ -248,10 +295,8 @@ async function delGame(gameId) {
   }
 }
 
-// Function to delete a customer
 async function deleteCustomer(customerId) {
   if (!confirm('Are you sure you want to delete this customer?')) return;
-
   try {
     await axios.delete(`http://127.0.0.1:5000/customers/${customerId}`);
     showModal('Customer deleted successfully!', true);
@@ -263,25 +308,25 @@ async function deleteCustomer(customerId) {
   }
 }
 
-// Function to edit a game: redirect to editGame.html with the game ID as a query parameter
+function editCustomer(customerId) {
+  window.location.href = `editCustomer.html?id=${customerId}`;
+}
+
 function editGame(gameId) {
   window.location.href = `editGame.html?id=${gameId}`;
 }
 
-// Function to handle logout
+// ------------------- Utility Functions -------------------
 function logout() {
   localStorage.removeItem('adminName');
   window.location.href = 'login.html';
 }
 
-// Simple modal for notifications
 function showModal(message, isSuccess = false) {
   const modal = document.getElementById('modal');
   const modalMessage = document.getElementById('modalMessage');
   modalMessage.textContent = message;
   modal.classList.add('active');
-  
-  // Style adjustments
   if (isSuccess) {
     modal.classList.add('success');
     modal.classList.remove('error');
@@ -289,16 +334,11 @@ function showModal(message, isSuccess = false) {
     modal.classList.add('error');
     modal.classList.remove('success');
   }
-  
   setTimeout(() => {
     modal.classList.remove('active');
   }, 2000);
 }
 
-// Theme toggle: switch between dark and light themes
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
 }
-
-// Load games by default when the page loads
-document.addEventListener('DOMContentLoaded', getGames);

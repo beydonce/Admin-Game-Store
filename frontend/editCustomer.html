@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Customer</title>
+    <!-- Link to the edit customer CSS file -->
+    <link rel="stylesheet" href="editCustomer.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Edit Customer</h1>
+      </header>
+      <form id="editForm">
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter username" required />
+        </div>
+        <!-- Password (leave blank to keep current) -->
+        <div class="form-group">
+          <label for="password">Password (leave blank to keep current)</label>
+          <input type="password" id="password" placeholder="Enter new password if needed" />
+        </div>
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Enter full name" />
+        </div>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter email" required />
+        </div>
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" placeholder="Enter phone number" required />
+        </div>
+        <!-- City -->
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" placeholder="Enter city" required />
+        </div>
+        <!-- Country -->
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input type="text" id="country" placeholder="Enter country" required />
+        </div>
+        <!-- Buttons -->
+        <div class="buttons">
+          <button type="submit" id="saveBtn">Save</button>
+          <button type="button" id="clearBtn">Clear</button>
+          <button type="button" id="backBtn">Return</button>
+        </div>
+      </form>
+
+      <!-- Loading Message -->
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Saving customer details, please wait...</p>
+      </div>
+      <!-- Error Message -->
+      <div id="error" class="error">
+        <p>Something went wrong. Please try again.</p>
+      </div>
+    </div>
+
+    <!-- Include Axios before the script for editCustomer.js -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="editCustomer.js"></script>
+  </body>
+</html>

@@ -13,6 +13,57 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///RoeisGames.db'
 db.init_app(app)  # Initialize the database with the Flask app
 
+
+@app.route('/customers/<int:customer_id>', methods=['DELETE'])
+def delete_customer(customer_id):
+    try:
+        customer = Customer.query.get(customer_id)
+        if not customer:
+            return jsonify({'message': 'Customer not found'}), 404
+
+        db.session.delete(customer)
+        db.session.commit()
+        return jsonify({'message': 'Customer deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to delete customer',
+            'message': str(e)
+        }), 500
+
+
+@app.route('/customers/<int:customer_id>', methods=['PUT'])
+def update_customer(customer_id):
+    try:
+        customer = Customer.query.get(customer_id)
+        if not customer:
+            return jsonify({'message': 'Customer not found'}), 404
+
+        data = request.get_json()
+        # Update fields if present in the payload
+        if 'username' in data:
+            customer.username = data['username']
+        if 'password' in data and data['password']:
+            # Make sure to hash the password if needed!
+            customer.password = data['password']
+        if 'customer_name' in data:
+            customer.customer_name = data['customer_name']
+        if 'email' in data:
+            customer.email = data['email']
+        if 'phone' in data:
+            customer.phone = data['phone']
+        if 'city' in data:
+            customer.city = data['city']
+        if 'country' in data:
+            customer.country = data['country']
+
+        db.session.commit()
+        return jsonify({'message': 'Customer updated successfully'}), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to update customer',
+            'message': str(e)
+        }), 500
+
 @app.route('/customers', methods=['POST'])
 def add_customer():
     data = request.json  # Parse JSON data from the request body
@@ -55,6 +106,34 @@ def get_customers():
             'error': 'Failed to retrieve customers',
             'message': str(e)
         }), 500
+
+@app.route('/customers/<int:customer_id>', methods=['GET'])
+def get_customer(customer_id):
+    try:
+        print(f"Fetching customer with ID: {customer_id}")  # Debug print
+        customer = Customer.query.get(customer_id)
+        if not customer:
+            print("Customer not found")  # Debug print
+            return jsonify({'message': 'Customer not found'}), 404
+        customer_data = {
+            'customer_id': customer.customer_id,
+            'username': customer.username,
+            'password': customer.password,
+            'customer_name': customer.customer_name,
+            'email': customer.email,
+            'phone': customer.phone,
+            'city': customer.city,
+            'country': customer.country
+        }
+        print(f"Customer data: {customer_data}")  # Debug print
+        return jsonify(customer_data), 200
+    except Exception as e:
+        print(f"Exception occurred: {str(e)}")  # Debug print
+        return jsonify({
+            'error': 'Failed to retrieve customer',
+            'message': str(e)
+        }), 500
+
 
 # Add a game (POST)
 @app.route('/games', methods=['POST'])

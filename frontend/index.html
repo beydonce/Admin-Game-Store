@@ -26,7 +26,7 @@
     
     <!-- Admin Navigation Tabs -->
     <nav class="admin-nav">
-      <button id="gamesTab" class="tab active">Games</button>
+      <button id="gamesTab" class="tab">Games</button>
       <button id="customersTab" class="tab">Customers</button>
     </nav>
 
@@ -91,7 +91,7 @@
     </div>
 
     <!-- Customers Section -->
-    <div id="customersSection" style="display: none;">
+    <div id="customersSection">
       <!-- Add Customer Section -->
       <section class="add-customer-section">
         <h2>Add New Customer</h2>
@@ -131,49 +131,8 @@
     <p>Loading...</p>
   </div>
 
-  <!-- Include Axios and script.js -->
+  <!-- External Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="script.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Display admin name
-      const adminName = localStorage.getItem('adminName') || 'Admin';
-      document.getElementById('adminName').textContent = adminName;
-      
-      // Navigation Tab Event Listeners
-      document.getElementById('gamesTab').addEventListener('click', function() {
-        document.getElementById('gamesSection').style.display = 'block';
-        document.getElementById('customersSection').style.display = 'none';
-        this.classList.add('active');
-        document.getElementById('customersTab').classList.remove('active');
-      });
-      
-      document.getElementById('customersTab').addEventListener('click', function() {
-        document.getElementById('gamesSection').style.display = 'none';
-        document.getElementById('customersSection').style.display = 'block';
-        this.classList.add('active');
-        document.getElementById('gamesTab').classList.remove('active');
-        getCustomers(); // Load customers when switching to this tab
-      });
-
-      // Other event listeners
-      document.getElementById('logoutButton').addEventListener('click', logout);
-      document.getElementById('addGameButton').addEventListener('click', function(event) {
-        event.preventDefault();
-        addGame();
-      });
-      document.getElementById('addCustomerButton').addEventListener('click', function(event) {
-        event.preventDefault();
-        addCustomer();
-      });
-      document.getElementById('filter-genre').addEventListener('change', renderFilteredAndSortedGames);
-      document.getElementById('sort-by').addEventListener('change', renderFilteredAndSortedGames);
-      document.getElementById('hamburger').addEventListener('click', function() {
-        const fs = document.getElementById('filterSortSection');
-        fs.classList.toggle('active');
-      });
-      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-    });
-  </script>
 </body>
 </html>
