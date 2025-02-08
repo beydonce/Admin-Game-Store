@@ -1,5 +1,7 @@
-let allGames = []; // Global variable to store all games
-let isDarkTheme = true; // Default to dark theme
+let allGames = [];       // Global variable to store all games
+let allCustomers = [];   // Global variable to store all customers
+
+// ------------------- Games Functions -------------------
 
 // Function to get all games from the API
 async function getGames() {
@@ -13,7 +15,7 @@ async function getGames() {
   }
 }
 
-// Function to render games based on selected filter and sort options
+// Function to render games based on filter and sort options
 function renderFilteredAndSortedGames() {
   const filterGenre = document.getElementById('filter-genre').value;
   const sortBy = document.getElementById('sort-by').value;
@@ -83,7 +85,7 @@ function renderFilteredAndSortedGames() {
   }
 }
 
-// Function to add a new game to the database
+// Function to add a new game
 async function addGame() {
   const name = document.getElementById('game-name').value.trim();
   const creator = document.getElementById('game-creator').value.trim();
@@ -128,7 +130,7 @@ async function addGame() {
       picture_url
     });
 
-    // Clear form fields after adding
+    // Clear form fields
     document.getElementById('game-name').value = '';
     document.getElementById('game-creator').value = '';
     document.getElementById('game-year-published').value = '';
@@ -141,6 +143,93 @@ async function addGame() {
   } catch (error) {
     console.error('Error adding game:', error);
     showModal('Failed to add game. Please check your inputs.');
+  }
+}
+
+// ------------------- Customers Functions -------------------
+
+// Function to get all customers from the API
+async function getCustomers() {
+  try {
+    const response = await axios.get('http://127.0.0.1:5000/customers');
+    allCustomers = response.data.customers || [];
+    renderCustomers();
+  } catch (error) {
+    console.error('Error fetching customers:', error);
+    showModal('Failed to load customers. Please try again later.');
+  }
+}
+
+// Function to render customers
+function renderCustomers() {
+  const customersContainer = document.getElementById('customers-container');
+  customersContainer.innerHTML = '';
+
+  if (allCustomers.length > 0) {
+    allCustomers.forEach(customer => {
+      const customerCard = document.createElement('div');
+      customerCard.classList.add('customer-card');
+      customerCard.id = `customer-${customer.customer_id}`;
+
+      customerCard.innerHTML = `
+        <h3>${customer.customer_name || customer.username}</h3>
+        <p><strong>Username:</strong> ${customer.username}</p>
+        <p><strong>Email:</strong> ${customer.email}</p>
+        <p><strong>Phone:</strong> ${customer.phone}</p>
+        <p><strong>City:</strong> ${customer.city}</p>
+        <p><strong>Country:</strong> ${customer.country}</p>
+        <div class="customer-actions">
+          <button onclick="deleteCustomer(${customer.customer_id})">Delete</button>
+        </div>
+      `;
+
+      customersContainer.appendChild(customerCard);
+    });
+  } else {
+    customersContainer.innerHTML = "<p>No customers available.</p>";
+  }
+}
+
+// Function to add a new customer
+async function addCustomer() {
+  const username = document.getElementById('customer-username').value.trim();
+  const password = document.getElementById('customer-password').value.trim();
+  const customerName = document.getElementById('customer-name').value.trim();
+  const email = document.getElementById('customer-email').value.trim();
+  const phone = document.getElementById('customer-phone').value.trim();
+  const city = document.getElementById('customer-city').value.trim();
+  const country = document.getElementById('customer-country').value.trim();
+
+  if (!username || !password || !email || !phone || !city || !country) {
+    showModal('Please fill in all required customer fields.');
+    return;
+  }
+
+  try {
+    await axios.post('http://127.0.0.1:5000/customers', {
+      username,
+      password,
+      customer_name: customerName,
+      email,
+      phone,
+      city,
+      country
+    });
+
+    // Clear form fields
+    document.getElementById('customer-username').value = '';
+    document.getElementById('customer-password').value = '';
+    document.getElementById('customer-name').value = '';
+    document.getElementById('customer-email').value = '';
+    document.getElementById('customer-phone').value = '';
+    document.getElementById('customer-city').value = '';
+    document.getElementById('customer-country').value = '';
+
+    getCustomers();
+    showModal('Customer added successfully!', true);
+  } catch (error) {
+    console.error('Error adding customer:', error);
+    showModal('Failed to add customer. Please check your inputs.');
   }
 }
 
@@ -159,12 +248,27 @@ async function delGame(gameId) {
   }
 }
 
+// Function to delete a customer
+async function deleteCustomer(customerId) {
+  if (!confirm('Are you sure you want to delete this customer?')) return;
+
+  try {
+    await axios.delete(`http://127.0.0.1:5000/customers/${customerId}`);
+    showModal('Customer deleted successfully!', true);
+    const customerCard = document.getElementById(`customer-${customerId}`);
+    if (customerCard) customerCard.remove();
+  } catch (error) {
+    console.error('Error deleting customer:', error);
+    showModal('Failed to delete customer. Please try again.');
+  }
+}
+
 // Function to edit a game: redirect to editGame.html with the game ID as a query parameter
 function editGame(gameId) {
   window.location.href = `editGame.html?id=${gameId}`;
 }
 
-// Function to handle logout - clear adminName and redirect to login page
+// Function to handle logout
 function logout() {
   localStorage.removeItem('adminName');
   window.location.href = 'login.html';
@@ -177,7 +281,7 @@ function showModal(message, isSuccess = false) {
   modalMessage.textContent = message;
   modal.classList.add('active');
   
-  // Adjust modal style based on success or error
+  // Style adjustments
   if (isSuccess) {
     modal.classList.add('success');
     modal.classList.remove('error');
@@ -186,18 +290,15 @@ function showModal(message, isSuccess = false) {
     modal.classList.remove('success');
   }
   
-  // Auto-close modal after 2 seconds
   setTimeout(() => {
     modal.classList.remove('active');
   }, 2000);
 }
 
 // Theme toggle: switch between dark and light themes
-// Function to toggle between dark and light themes
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
 }
 
-
-// Load all games when the page loads
+// Load games by default when the page loads
 document.addEventListener('DOMContentLoaded', getGames);

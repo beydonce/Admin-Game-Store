@@ -3,6 +3,7 @@ from flask_cors import CORS
 from models import db
 from models.user import User
 from models.Game import Game
+from models.Customer import Customer
 
 app = Flask(__name__)  # Create a Flask instance
 # Enable CORS for all routes (for development)
@@ -11,6 +12,49 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Configure the database (SQLite in this example)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///RoeisGames.db'
 db.init_app(app)  # Initialize the database with the Flask app
+
+@app.route('/customers', methods=['POST'])
+def add_customer():
+    data = request.json  # Parse JSON data from the request body
+    new_customer = Customer(
+        username=data['username'],
+        password=data['password'],
+        customer_name=data['customer_name'],
+        email=data['email'],
+        phone=data['phone'],
+        city=data['city'],
+        country=data['country']
+    )
+    db.session.add(new_customer)  # Add the new customer to the session
+    db.session.commit()       # Commit the session to save changes
+    return jsonify({'message': 'Customer added to database.'}), 201
+
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    try:
+        customers = Customer.query.all()  # Retrieve all customers from the database
+        customers_list = []
+        for customer in customers:
+            customer_data = {
+                'customer_id': customer.customer_id,  # Use customer_id instead of id
+                'username': customer.username,
+                'password': customer.password,
+                'customer_name': customer.customer_name,
+                'email': customer.email,
+                'phone': customer.phone,
+                'city': customer.city,
+                'country': customer.country
+            }
+            customers_list.append(customer_data)
+        return jsonify({
+            'message': 'Customers retrieved successfully',
+            'customers': customers_list
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to retrieve customers',
+            'message': str(e)
+        }), 500
 
 # Add a game (POST)
 @app.route('/games', methods=['POST'])
@@ -146,3 +190,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create all database tables defined in your models
     app.run(debug=True)
+    
+

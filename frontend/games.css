@@ -195,7 +195,7 @@ body.light-theme .card-content p {
 }
 
 body.light-theme .sold-badge {
-  background-color: #e74c3c; /* You can keep the sold out badge color the same if desired */
+  background-color: #e74c3c;
 }
 
 body.light-theme .game-actions {
@@ -211,7 +211,6 @@ body.light-theme .game-actions button:hover {
   background: #ff5252;
   transform: scale(1.05);
 }
-
 
 /* Hamburger Menu (for mobile filtering) */
 .hamburger {
@@ -251,6 +250,21 @@ body.light-theme .game-actions button:hover {
   color: #ecf0f1;
 }
 
+/* Add Customer Section */
+.add-customer-section {
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.add-customer-section h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #ecf0f1;
+}
+
+/* Form Group */
 .form-group {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -490,6 +504,80 @@ body.light-theme .game-actions button:hover {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Admin Navigation Tabs */
+.admin-nav {
+  display: flex;
+  gap: 10px;
+  margin: 20px 30px;
+}
+
+.admin-nav .tab {
+  background: #2980b9;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.admin-nav .tab.active {
+  background: #8e44ad;
+}
+
+/* Customers Grid */
+.customers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Customer Card */
+.customer-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 15px;
+  position: relative;
+}
+
+.customer-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.customer-card h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.customer-card p {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.customer-actions {
+  margin-top: 10px;
+}
+
+.customer-actions button {
+  background: #ff4757;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.customer-actions button:hover {
+  background: #e84118;
+  transform: scale(1.05);
 }
 
 /* Responsive Adjustments */
