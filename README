@@ -1,0 +1,78 @@
+Game Management System
+
+Overview
+
+The Game Management System is a web-based application that allows administrators to efficiently manage a collection of games and customers. The system provides functionality to add, update, and display games, as well as manage customer accounts.
+
+Features
+
+🔹 Game Management
+
+Add new games with details such as name, creator, year published, genre, quantity, and image URL.
+
+Filter games by genre and sort by various attributes (quantity, year, name, etc.).
+
+Display all available games and sold-out games.
+
+🔹 Customer Management
+
+Add new customers with credentials and personal information (username, email, phone, city, country).
+
+Display a list of all customers with their respective details.
+
+Customer cards display the username as the primary identifier.
+
+🔹 User Experience
+
+Modern and responsive UI for seamless navigation.
+
+Theme toggle option for light/dark mode.
+
+Interactive modal for notifications and a loading spinner for better user feedback.
+
+Technologies Used
+
+HTML5, CSS3, JavaScript for the front-end.
+
+Axios for handling HTTP requests.
+
+Google Fonts for improved typography.
+
+Custom CSS for a clean and modern design.
+
+Project Structure
+
+📂 Game-Management-System
+├── 📂 assets          # Images and additional resources
+├── 📂 styles          # CSS stylesheets
+│   ├── games.css
+├── 📂 scripts         # JavaScript files
+│   ├── script.js
+├── index.html         # Main interface of the system
+├── README.md          # Project documentation
+
+Installation & Usage
+
+Clone the repository:
+
+git clone https://github.com/yourusername/Game-Management-System.git
+
+Open index.html in a browser.
+
+Ensure a backend is set up for handling customer and game data if required.
+
+Future Enhancements
+
+Implement customer authentication and login system.
+
+Add game purchase functionality.
+
+Enhance UI with animations and improved user experience.
+
+License
+
+This project is licensed under the MIT License.
+
+Author
+
+Developed by Roei Koriat.
