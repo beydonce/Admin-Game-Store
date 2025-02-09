@@ -28,9 +28,16 @@
           <input type="number" id="year_published" placeholder="e.g., 2020" required />
         </div>
 
+        <!-- Replace genre input with a dropdown select -->
         <div class="form-group">
           <label for="genre">Genre</label>
-          <input type="text" id="genre" placeholder="Enter genre" required />
+          <select id="genre" required>
+            <option value="">Select Genre</option>
+            <option value="action">Action</option>
+            <option value="adventure">Adventure</option>
+            <option value="strategy">Strategy</option>
+            <option value="rpg">RPG</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -38,7 +45,6 @@
           <input type="number" id="quantity" placeholder="Enter quantity" required />
         </div>
            
-
         <div class="form-group">
           <label for="picture_url">Picture URL</label>
           <input type="url" id="picture_url" placeholder="https://example.com/image.jpg" />

@@ -86,7 +86,6 @@ function renderFilteredAndSortedGames() {
     filteredGames = filteredGames.filter(game => game.genre.toLowerCase() === filterGenre.toLowerCase());
   }
 
-  // Sorting logic
   if (sortBy === 'quantity-asc') {
     filteredGames.sort((a, b) => a.quantity - b.quantity);
   } else if (sortBy === 'quantity-desc') {
@@ -224,8 +223,8 @@ function renderCustomers() {
       customerCard.classList.add('customer-card');
       customerCard.id = `customer-${customer.customer_id}`;
       customerCard.innerHTML = `
-        <h3>${customer.customer_name || customer.username}</h3>
-        <p><strong>Username:</strong> ${customer.username}</p>
+        <h3>${ customer.username}</h3>
+        <p><strong>Customer Name:</strong> ${customer.customer_name}</p>
         <p><strong>Email:</strong> ${customer.email}</p>
         <p><strong>Phone:</strong> ${customer.phone}</p>
         <p><strong>City:</strong> ${customer.city}</p>
@@ -243,29 +242,25 @@ function renderCustomers() {
 }
 
 async function addCustomer() {
-  const username = document.getElementById('customer-username').value.trim();
-  const password = document.getElementById('customer-password').value.trim();
-  const customerName = document.getElementById('customer-name').value.trim();
-  const email = document.getElementById('customer-email').value.trim();
-  const phone = document.getElementById('customer-phone').value.trim();
-  const city = document.getElementById('customer-city').value.trim();
-  const country = document.getElementById('customer-country').value.trim();
+  const data = {
+    username: document.getElementById('customer-username').value.trim(),
+    password: document.getElementById('customer-password').value.trim(),
+    customer_name: document.getElementById('customer-name').value.trim(),
+    email: document.getElementById('customer-email').value.trim(),
+    phone: document.getElementById('customer-phone').value.trim(),
+    city: document.getElementById('customer-city').value.trim(),
+    country: document.getElementById('customer-country').value.trim()
+  };
 
-  if (!username || !password || !email || !phone || !city || !country) {
-    showModal('Please fill in all required customer fields.');
+  // Validate customer data for new customer (isNew = true)
+  const errors = validateCustomerData(data, true);
+  if (errors.length > 0) {
+    alert(errors.join("\n"));
     return;
   }
 
   try {
-    await axios.post('http://127.0.0.1:5000/customers', {
-      username,
-      password,
-      customer_name: customerName,
-      email,
-      phone,
-      city,
-      country
-    });
+    await axios.post('http://127.0.0.1:5000/customers', data);
     document.getElementById('customer-username').value = '';
     document.getElementById('customer-password').value = '';
     document.getElementById('customer-name').value = '';
@@ -314,6 +309,52 @@ function editCustomer(customerId) {
 
 function editGame(gameId) {
   window.location.href = `editGame.html?id=${gameId}`;
+}
+
+// ------------------- Validation Function -------------------
+function validateCustomerData(data, isNew = true, currentId = null) {
+  let errors = [];
+  if (!data.username || data.username.length < 3) {
+    errors.push("Username must be at least 3 characters long.");
+  }
+  if (isNew) {
+    if (!data.password) {
+      errors.push("Password is required.");
+    } else if (data.password.length < 6) {
+      errors.push("Password must be at least 6 characters long.");
+    }
+  } else {
+    if (data.password && data.password.length < 6) {
+      errors.push("Password must be at least 6 characters long if provided.");
+    }
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    errors.push("Please enter a valid email address.");
+  }
+  const phoneRegex = /^[0-9\-\+\s\(\)]+$/;
+  if (!phoneRegex.test(data.phone)) {
+    errors.push("Please enter a valid phone number.");
+  }
+  if (!data.city) {
+    errors.push("City is required.");
+  }
+  if (!data.country) {
+    errors.push("Country is required.");
+  }
+  // Duplicate username check
+  if (allCustomers && allCustomers.length > 0) {
+    if (isNew) {
+      if (allCustomers.some(c => c.username.toLowerCase() === data.username.toLowerCase())) {
+         errors.push("Username already exists. Please choose a different username.");
+      }
+    } else {
+      if (allCustomers.some(c => c.username.toLowerCase() === data.username.toLowerCase() && c.customer_id != currentId)) {
+         errors.push("Username already exists. Please choose a different username.");
+      }
+    }
+  }
+  return errors;
 }
 
 // ------------------- Utility Functions -------------------

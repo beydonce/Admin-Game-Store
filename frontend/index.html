@@ -42,7 +42,6 @@
             <option value="adventure">Adventure</option>
             <option value="strategy">Strategy</option>
             <option value="rpg">RPG</option>
-            <!-- Add more options as needed -->
           </select>
         </div>
         <div class="sort-group">
@@ -65,8 +64,15 @@
         <div class="form-group">
           <input type="text" id="game-name" placeholder="Game Name" />
           <input type="text" id="game-creator" placeholder="Creator" />
-          <input type="text" id="game-year-published" placeholder="Year Published (e.g. 2023)" />
-          <input type="text" id="game-genre" placeholder="Genre" />
+          <input type="text" id="game-year-published" placeholder="Year Published" />
+          <!-- Replaced the genre text input with a select dropdown -->
+          <select id="game-genre" required>
+            <option value="">Select Genre</option>
+            <option value="action">Action</option>
+            <option value="adventure">Adventure</option>
+            <option value="strategy">Strategy</option>
+            <option value="rpg">RPG</option>
+          </select>
           <input type="number" id="game-quantity" placeholder="Quantity" min="0" />
           <input type="text" id="game-picture-url" placeholder="Picture URL" />
           <button id="addGameButton">Add Game</button>
@@ -111,7 +117,7 @@
       <section class="customers-display">
         <h2>All Customers</h2>
         <div id="customers-container" class="customers-grid">
-          <!-- Customer cards will be dynamically added here -->
+          <!-- Customer cards will be dynamically added here, using username as headline -->
         </div>
       </section>
     </div>

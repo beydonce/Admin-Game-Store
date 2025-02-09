@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
 // Fetch the current customer details and pre-fill the form.
 async function getCustomerDetails(customerId) {
   try {
-    // The backend returns the customer data as a flat JSON object.
     const response = await axios.get(`http://127.0.0.1:5000/customers/${customerId}`);
     const customer = response.data;
     
@@ -44,55 +43,50 @@ async function getCustomerDetails(customerId) {
 async function updateCustomer(event) {
   event.preventDefault();
 
-  // Get the Save button element and disable it immediately.
   const saveBtn = document.getElementById('saveBtn');
   saveBtn.disabled = true;
 
-  // Get the customer ID from the URL query parameters.
   const urlParams = new URLSearchParams(window.location.search);
   const customerId = urlParams.get('id');
 
-  // Gather form field values.
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
-  const name = document.getElementById('name').value.trim();
+  const customer_name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
   const city = document.getElementById('city').value.trim();
   const country = document.getElementById('country').value.trim();
 
-  // Simple validation for required fields.
-  if (!username || !email || !phone || !city || !country) {
-    alert('Please fill in all required fields.');
+  // Validate input
+  const errors = validateCustomerData({ username, password, customer_name, email, phone, city, country }, false);
+  if (errors.length > 0) {
+    alert(errors.join("\n"));
     saveBtn.disabled = false;
     return;
   }
 
-  // Prepare the update data. Include the password only if provided.
-  let updateData = {
-    username: username,
-    customer_name: name,
-    email: email,
-    phone: phone,
-    city: city,
-    country: country
-  };
-  if (password) {
-    updateData.password = password;
-  }
-  
-  console.log('Sending update for customer:', customerId, updateData);
-
   try {
-    // Show the loading indicator.
+    // Get the current customer details
+    const response = await axios.get(`http://127.0.0.1:5000/customers/${customerId}`);
+    const currentCustomer = response.data;
+    
+    // Check if the username already exists (excluding the current user)
+    const usernameCheck = await axios.get(`http://127.0.0.1:5000/customers/check-username/${username}`);
+    
+    if (usernameCheck.data.exists && username !== currentCustomer.username) {
+      alert("Username already exists. Please choose a different one.");
+      saveBtn.disabled = false;
+      return;
+    }
+
     document.getElementById('loading').style.display = 'block';
 
-    // Send a PUT request to update the customer.
-    await axios.put(`http://127.0.0.1:5000/customers/${customerId}`, updateData);
+    // Proceed with updating the customer
+    await axios.put(`http://127.0.0.1:5000/customers/${customerId}`, {
+      username, password, customer_name, email, phone, city, country
+    });
 
-    // Hide the loading indicator.
     document.getElementById('loading').style.display = 'none';
-
     alert('Customer updated successfully!');
     window.location.href = 'index.html';
   } catch (error) {
@@ -106,4 +100,38 @@ async function updateCustomer(event) {
 // Utility function to clear the form fields.
 function clearForm() {
   document.getElementById('editForm').reset();
+}
+
+// ------------------- Validation Function -------------------
+function validateCustomerData(data, isNew = true) {
+  let errors = [];
+  if (!data.username || data.username.length < 3) {
+    errors.push("Username must be at least 3 characters long.");
+  }
+  if (isNew) {
+    if (!data.password) {
+      errors.push("Password is required.");
+    } else if (data.password.length < 6) {
+      errors.push("Password must be at least 6 characters long.");
+    }
+  } else {
+    if (data.password && data.password.length < 6) {
+      errors.push("Password must be at least 6 characters long if provided.");
+    }
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    errors.push("Please enter a valid email address.");
+  }
+  const phoneRegex = /^[0-9\-\+\s\(\)]+$/;
+  if (!phoneRegex.test(data.phone)) {
+    errors.push("Please enter a valid phone number.");
+  }
+  if (!data.city) {
+    errors.push("City is required.");
+  }
+  if (!data.country) {
+    errors.push("Country is required.");
+  }
+  return errors;
 }

@@ -14,6 +14,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///RoeisGames.db'
 db.init_app(app)  # Initialize the database with the Flask app
 
 
+@app.route('/customers/check-username/<username>', methods=['GET'])
+def check_username(username):
+    existing_customer = Customer.query.filter_by(username=username).first()
+    return jsonify({"exists": existing_customer is not None})
+
+
 @app.route('/customers/<int:customer_id>', methods=['DELETE'])
 def delete_customer(customer_id):
     try:
