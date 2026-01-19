@@ -15,17 +15,9 @@ Theme toggle for switching between light and dark modes.
 Dynamic updates using JavaScript and Axios.
 🛠️ Technologies Used
 Frontend: HTML, CSS, JavaScript
-Backend: Node.js, Express (if applicable)
-Database: MongoDB/MySQL (if applicable)
-Libraries: Axios (for API requests)
+Database: mysqlite
 
-🚀 Installation & Setup
 Clone the repository:
 git clone https://github.com/your-username/game-management-system.git
-cd game-management-system
-Open index.html in a browser
 
-
-🤝 Contribution
-Feel free to contribute by submitting pull requests!
 
